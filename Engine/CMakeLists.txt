@@ -1,0 +1,18 @@
+find_package(GLEW REQUIRED)
+
+add_library(KosmicEngine 
+    src/Core/Application.cpp
+    src/Renderer/Shader.cpp
+    src/Renderer/Renderer3D.cpp
+)
+
+target_include_directories(KosmicEngine PUBLIC 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_link_libraries(KosmicEngine PUBLIC
+    SDL2::SDL2
+    OpenGL::GL
+    GLEW::GLEW  # Adicionar GLEW
+    EnTT
+)
