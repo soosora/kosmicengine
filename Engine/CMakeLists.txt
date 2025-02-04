@@ -1,9 +1,11 @@
 find_package(GLEW REQUIRED)
+find_package(glm REQUIRED)
 
 add_library(KosmicEngine 
     src/Core/Application.cpp
     src/Renderer/Shader.cpp
     src/Renderer/Renderer3D.cpp
+    src/Renderer/Mesh.cpp
 )
 
 target_include_directories(KosmicEngine PUBLIC 
@@ -13,6 +15,7 @@ target_include_directories(KosmicEngine PUBLIC
 target_link_libraries(KosmicEngine PUBLIC
     SDL2::SDL2
     OpenGL::GL
-    GLEW::GLEW  # Adicionar GLEW
+    GLEW::GLEW
     EnTT
+    glm::glm
 )

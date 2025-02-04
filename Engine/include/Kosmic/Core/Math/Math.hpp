@@ -4,7 +4,13 @@
 #include <numbers>
 #include <array>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 namespace Kosmic::Math {
+
+using Mat4 = glm::mat4;
 
 // Vector2
 struct Vector2 {
