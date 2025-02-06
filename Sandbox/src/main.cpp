@@ -2,8 +2,10 @@
 #include "Kosmic/Renderer/Renderer3D.hpp"
 #include "Kosmic/Core/Math/Math.hpp"
 #include "Kosmic/Renderer/Mesh.hpp"
+#include "Kosmic/Renderer/Texture.hpp"
 #include "Kosmic/Core/Logging.hpp"
 #include <SDL2/SDL.h>
+#include "Kosmic/Renderer/Lighting.hpp"
 
 using namespace Kosmic;
 
@@ -14,6 +16,10 @@ public:
 private:
     Renderer::Renderer3D renderer;
     std::shared_ptr<Renderer::Camera> camera;
+    std::shared_ptr<Renderer::Texture> texture;
+    
+    Renderer::Lighting::AmbientLight ambientLight;
+    Renderer::Lighting::DirectionalLight dirLight;
 
     // Add input handling using SDL
     bool IsKeyPressed(SDL_Keycode key) {
@@ -34,6 +40,17 @@ protected:
         camera->SetPosition({0.0f, 0.0f, 3.0f});
         renderer.SetCamera(camera);
 		KOSMIC_INFO("(Sandbox) Camera setup complete.");
+
+		// Load texture
+		texture = std::make_shared<Renderer::Texture>("resources/texture.png");
+		KOSMIC_INFO("(Sandbox) Texture loaded.");
+        
+        // Initialize lighting (in white for ambient and directional)
+        ambientLight.color = {1.0f, 1.0f, 1.0f};
+        ambientLight.intensity = 0.3f;
+        dirLight.direction = { -0.2f, -1.0f, -0.3f };
+        dirLight.color = {1.0f, 1.0f, 1.0f};
+        dirLight.intensity = 0.7f;
 	}
 	
     // Update logic
@@ -47,7 +64,6 @@ protected:
 		if (IsKeyPressed(SDLK_LSHIFT)) camera->SetPosition(camera->GetPosition() + Math::Vector3(0.0f, -0.1f, 0.0f));
 
 		float rotationSpeed = 50.0f * deltaTime; // Degrees per second
-
 		float currentPitch = camera->GetPitch();
 		float currentYaw = camera->GetYaw();
 
@@ -66,10 +82,26 @@ protected:
 
     // Rendering
 	void OnRender() override {
+		// Bind texture to slot 0
+		texture->Bind(0);
+        
+        // Configure lighting uniforms via shader obtained from renderer
+        {
+            auto shader = renderer.GetShader();
+            shader->Bind();
+            shader->SetVec3("u_AmbientLightColor", ambientLight.color);
+            shader->SetFloat("u_AmbientLightIntensity", ambientLight.intensity);
+            shader->SetVec3("u_DirLightDirection", dirLight.direction);
+            shader->SetVec3("u_DirLightColor", dirLight.color);
+            shader->SetFloat("u_DirLightIntensity", dirLight.intensity);
+            shader->Unbind();
+        }
+        
 		// Example: Render cube
 		renderer.SetMesh(Renderer::MeshLibrary::Cube());
-		// Call render to draw the mesh
 		renderer.Render();
+		// Unbind texture
+		texture->Unbind();
 	}
 
     // Cleaning

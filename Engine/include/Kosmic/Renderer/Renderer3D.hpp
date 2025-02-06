@@ -3,6 +3,7 @@
 #include <memory>
 #include "Camera.hpp"
 #include "Mesh.hpp"
+#include "Shader.hpp"
 
 namespace Kosmic::Renderer {
 
@@ -15,6 +16,7 @@ public:
     void Render();
     void SetCamera(const std::shared_ptr<Camera>& camera);
     void SetMesh(const std::shared_ptr<Mesh>& mesh);
+    std::shared_ptr<Shader> GetShader();
     static uint64_t GetLastGPUTime();
 
 private:

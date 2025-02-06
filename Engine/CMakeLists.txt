@@ -7,6 +7,7 @@ add_library(KosmicEngine
     src/Renderer/Renderer3D.cpp
     src/Renderer/Mesh.cpp
     src/Renderer/Camera.cpp
+    src/Renderer/Texture.cpp
 )
 
 target_include_directories(KosmicEngine PUBLIC 

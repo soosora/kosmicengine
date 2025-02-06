@@ -62,6 +62,8 @@ void Renderer3D::Render() {
     
     // Use shader and render
     pImpl->shader->Bind();
+    // Set texture uniform
+    pImpl->shader->SetInt("u_Texture", 0);
     pImpl->shader->SetMat4("view", pImpl->camera->GetViewMatrix());
     pImpl->shader->SetMat4("projection", pImpl->camera->GetProjectionMatrix());
     
@@ -81,6 +83,10 @@ void Renderer3D::Render() {
 
 uint64_t Renderer3D::GetLastGPUTime() {
     return s_LastGPUTime;
+}
+
+std::shared_ptr<Shader> Renderer3D::GetShader() {
+    return pImpl->shader;
 }
 
 } // namespace Kosmic::Renderer
