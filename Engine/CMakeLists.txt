@@ -3,6 +3,7 @@ find_package(glm REQUIRED)
 
 add_library(KosmicEngine 
     src/Core/Application.cpp
+    src/Core/Input.cpp
     src/Renderer/Shader.cpp
     src/Renderer/Renderer3D.cpp
     src/Renderer/Mesh.cpp

@@ -6,6 +6,7 @@
 #include "Kosmic/Core/Logging.hpp"
 #include <SDL2/SDL.h>
 #include "Kosmic/Renderer/Lighting.hpp"
+#include "Kosmic/Core/Input.hpp"
 
 using namespace Kosmic;
 
@@ -55,30 +56,35 @@ protected:
 	
     // Update logic
 	void OnUpdate(float deltaTime) override {
-        // Example: Simple camera movement
-        if (IsKeyPressed(SDLK_w)) camera->SetPosition(camera->GetPosition() + Math::Vector3(0.0f, 0.0f, -0.1f));
-        if (IsKeyPressed(SDLK_s)) camera->SetPosition(camera->GetPosition() + Math::Vector3(0.0f, 0.0f, 0.1f));
-		if (IsKeyPressed(SDLK_a)) camera->SetPosition(camera->GetPosition() + Math::Vector3(-0.1f, 0.0f, 0.0f));
-		if (IsKeyPressed(SDLK_d)) camera->SetPosition(camera->GetPosition() + Math::Vector3(0.1f, 0.0f, 0.0f));
-		if (IsKeyPressed(SDLK_SPACE)) camera->SetPosition(camera->GetPosition() + Math::Vector3(0.0f, 0.1f, 0.0f));
-		if (IsKeyPressed(SDLK_LSHIFT)) camera->SetPosition(camera->GetPosition() + Math::Vector3(0.0f, -0.1f, 0.0f));
-
-		float rotationSpeed = 50.0f * deltaTime; // Degrees per second
-		float currentPitch = camera->GetPitch();
-		float currentYaw = camera->GetYaw();
-
-		if (IsKeyPressed(SDLK_q))
-		{
-			currentYaw -= rotationSpeed;
-			camera->SetRotation(currentPitch, currentYaw);
-		}
-
-		if (IsKeyPressed(SDLK_e))
-		{
-			currentYaw += rotationSpeed;
-			camera->SetRotation(currentPitch, currentYaw);
-		}
-	}
+        float speed = 0.1f;
+        // Retrieve current position and orientation
+        auto pos     = camera->GetPosition();
+        auto forward = camera->GetFront();
+        auto up      = Math::Vector3(0.0f, 1.0f, 0.0f);
+        auto right   = Math::Normalize(Math::Cross(forward, up));
+        
+        // Apply movement relative to camera orientation
+        if (IsKeyPressed(SDLK_w)) pos = pos + forward * speed;
+        if (IsKeyPressed(SDLK_s)) pos = pos - forward * speed;
+        if (IsKeyPressed(SDLK_d)) pos = pos + right   * speed;
+        if (IsKeyPressed(SDLK_a)) pos = pos - right   * speed;
+        if (IsKeyPressed(SDLK_SPACE)) pos = pos + up   * speed;
+        if (IsKeyPressed(SDLK_LSHIFT)) pos = pos - up  * speed;
+        
+        camera->SetPosition(pos);
+        
+        float currentPitch = camera->GetPitch();
+        float currentYaw   = camera->GetYaw();
+        
+        int mouseDeltaX, mouseDeltaY;
+        Kosmic::Input::GetMouseDelta(mouseDeltaX, mouseDeltaY);
+        if (mouseDeltaX || mouseDeltaY) {
+            float sensitivity = 0.1f;
+            currentYaw   += mouseDeltaX * sensitivity;
+            currentPitch -= mouseDeltaY * sensitivity;
+            camera->SetRotation(currentPitch, currentYaw);
+        }
+    }
 
     // Rendering
 	void OnRender() override {

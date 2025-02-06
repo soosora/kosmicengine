@@ -7,6 +7,7 @@
 #include "imgui_impl_opengl3.h"
 #include <iostream>
 #include "Kosmic/Renderer/Renderer3D.hpp"
+#include "Kosmic/Core/Input.hpp"
 
 namespace Kosmic {
 
@@ -57,6 +58,8 @@ Application::Application(const std::string& title, int width, int height)
     ImGui::CreateContext();
     ImGui_ImplSDL2_InitForOpenGL(m_Window, m_GLContext);
     ImGui_ImplOpenGL3_Init("#version 330");
+
+    SDL_SetRelativeMouseMode(SDL_TRUE);
 }
 
 Application::~Application() {
@@ -86,6 +89,8 @@ void Application::Run() {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             ImGui_ImplSDL2_ProcessEvent(&event);
+            // Process input events
+            Kosmic::Input::ProcessEvent(event);
             if (event.type == SDL_QUIT) {
                 m_Running = false;
             }

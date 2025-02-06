@@ -19,6 +19,7 @@ public:
     const Math::Mat4& GetViewMatrix() const { return m_ViewMatrix; }
     const Math::Mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
     const Math::Vector3& GetPosition() const { return m_Position; }
+    const Math::Vector3& GetFront() const { return m_Front; }
 
     float GetPitch() const;
     float GetYaw() const;

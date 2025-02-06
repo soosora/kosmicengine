@@ -128,4 +128,20 @@ struct Transform {
     }
 };
 
+// Normalize a vector
+inline Vector3 Normalize(const Vector3& v) {
+    float mag = std::sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
+    if(mag > 0.0f) return { v.x / mag, v.y / mag, v.z / mag };
+    return { 0.0f, 0.0f, 0.0f };
+}
+
+// Cross product between two vectors
+inline Vector3 Cross(const Vector3& a, const Vector3& b) {
+    return {
+        a.y * b.z - a.z * b.y,
+        a.z * b.x - a.x * b.z,
+        a.x * b.y - a.y * b.x
+    };
+}
+
 } // namespace Kosmic::Math
