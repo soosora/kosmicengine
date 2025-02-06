@@ -4,7 +4,6 @@
 #include "Kosmic/Renderer/Mesh.hpp"
 #include "Kosmic/Renderer/Texture.hpp"
 #include "Kosmic/Core/Logging.hpp"
-#include <SDL2/SDL.h>
 #include "Kosmic/Renderer/Lighting.hpp"
 #include "Kosmic/Core/Input.hpp"
 
@@ -21,12 +20,6 @@ private:
     
     Renderer::Lighting::AmbientLight ambientLight;
     Renderer::Lighting::DirectionalLight dirLight;
-
-    // Add input handling using SDL
-    bool IsKeyPressed(SDL_Keycode key) {
-        const Uint8* state = SDL_GetKeyboardState(nullptr);
-        return state[SDL_GetScancodeFromKey(key)];
-    }
 
 protected:
     // Initialization
@@ -64,12 +57,12 @@ protected:
         auto right   = Math::Normalize(Math::Cross(forward, up));
         
         // Apply movement relative to camera orientation
-        if (IsKeyPressed(SDLK_w)) pos = pos + forward * speed;
-        if (IsKeyPressed(SDLK_s)) pos = pos - forward * speed;
-        if (IsKeyPressed(SDLK_d)) pos = pos + right   * speed;
-        if (IsKeyPressed(SDLK_a)) pos = pos - right   * speed;
-        if (IsKeyPressed(SDLK_SPACE)) pos = pos + up   * speed;
-        if (IsKeyPressed(SDLK_LSHIFT)) pos = pos - up  * speed;
+        if (Input::IsKeyPressed(SDLK_w)) pos = pos + forward * speed;
+        if (Input::IsKeyPressed(SDLK_s)) pos = pos - forward * speed;
+        if (Input::IsKeyPressed(SDLK_d)) pos = pos + right   * speed;
+        if (Input::IsKeyPressed(SDLK_a)) pos = pos - right   * speed;
+        if (Input::IsKeyPressed(SDLK_SPACE)) pos = pos + up   * speed;
+        if (Input::IsKeyPressed(SDLK_LSHIFT)) pos = pos - up  * speed;
         
         camera->SetPosition(pos);
         
@@ -105,6 +98,7 @@ protected:
         
 		// Example: Render cube
 		renderer.SetMesh(Renderer::MeshLibrary::Cube());
+		// Render procedural sky
 		renderer.Render();
 		// Unbind texture
 		texture->Unbind();
@@ -115,7 +109,7 @@ protected:
 };
 
 int main() {
-    Kosmic::Log::Init(); // Initialize logger
+    Log::Init(); // Initialize logger
 	KOSMIC_INFO("(Sandbox) Starting SandboxApp...");
 	SandboxApp app;
 	app.Run();

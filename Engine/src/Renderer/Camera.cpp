@@ -59,4 +59,11 @@ float Camera::GetYaw() const {
     return m_Yaw;
 }
 
+// Get view matrix without translation (skybox rendering)
+const Math::Mat4 Camera::GetViewMatrixNoTranslation() const {
+    glm::mat4 view = m_ViewMatrix;
+    view[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+    return view;
+}
+
 } // namespace Kosmic::Renderer

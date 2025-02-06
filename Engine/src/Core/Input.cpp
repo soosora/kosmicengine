@@ -13,6 +13,12 @@ namespace Kosmic::Input {
 		}
 	}
 
+    // Add input handling using SDL
+    bool IsKeyPressed(SDL_Keycode key) {
+        const Uint8* state = SDL_GetKeyboardState(nullptr);
+        return state[SDL_GetScancodeFromKey(key)];
+    }
+
 	void GetMouseDelta(int& deltaX, int& deltaY) {
 		deltaX = s_MouseDeltaX;
 		deltaY = s_MouseDeltaY;

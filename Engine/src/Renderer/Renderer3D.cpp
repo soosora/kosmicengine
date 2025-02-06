@@ -18,6 +18,9 @@ public:
     std::shared_ptr<Camera> camera;
     GLuint queryID = 0;      // OpenGL query object for GPU timing
     uint64_t gpuTime = 0;    // Last measured GPU time (ns)
+    // Procedural sky
+    std::shared_ptr<Shader> skyShader;
+    std::shared_ptr<Mesh> skyMesh;
 };
 
 Renderer3D::Renderer3D() : pImpl(std::make_unique<Impl>()) {}
@@ -33,6 +36,10 @@ void Renderer3D::Init() {
 
     // Create and configure shader
     pImpl->shader = Shader::CreateBasicShader();
+    
+    // Create sky shader and sky mesh (a cube used for sky dome)
+    pImpl->skyShader = Shader::CreateSkyShader();
+    pImpl->skyMesh   = MeshLibrary::Cube();
     
     // Create OpenGL query object for GPU timing
     glGenQueries(1, &pImpl->queryID);
@@ -53,12 +60,35 @@ void Renderer3D::SetCamera(const std::shared_ptr<Camera>& cam) {
     pImpl->camera = cam;
 }
 
+void Renderer3D::RenderSky() {
+    // Disable depth writing
+    glDepthMask(GL_FALSE);
+    // Set face culling to render inside of the cube
+    glCullFace(GL_FRONT);
+    
+    pImpl->skyShader->Bind();
+    pImpl->skyShader->SetMat4("view", pImpl->camera->GetViewMatrixNoTranslation());
+    pImpl->skyShader->SetMat4("projection", pImpl->camera->GetProjectionMatrix());
+    
+    pImpl->skyMesh->Draw();
+    
+    pImpl->skyShader->Unbind();
+    
+    // Restore default culling order
+    glCullFace(GL_BACK);
+    // Re-enable depth writing
+    glDepthMask(GL_TRUE);
+}
+
 void Renderer3D::Render() {
     // Clears the buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     // Begin GPU timing query
     glBeginQuery(GL_TIME_ELAPSED, pImpl->queryID);
+    
+    // Render procedural sky first (does not affect scene depth)
+    RenderSky();
     
     // Use shader and render
     pImpl->shader->Bind();

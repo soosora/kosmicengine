@@ -18,6 +18,7 @@ public:
     void Unbind() const;
 
     static std::shared_ptr<Shader> CreateBasicShader();
+    static std::shared_ptr<Shader> CreateSkyShader();
 
     void SetMat4(const std::string& name, const Math::Mat4& matrix);
     void SetVec3(const std::string& name, const Math::Vector3& value);

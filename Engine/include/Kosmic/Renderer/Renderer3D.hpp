@@ -14,6 +14,7 @@ public:
 
     void Init();
     void Render();
+    void RenderSky();
     void SetCamera(const std::shared_ptr<Camera>& camera);
     void SetMesh(const std::shared_ptr<Mesh>& mesh);
     std::shared_ptr<Shader> GetShader();

@@ -107,4 +107,12 @@ std::shared_ptr<Shader> Shader::CreateBasicShader() {
     return std::make_shared<Shader>(vertexSrc, fragmentSrc);
 }
 
+std::shared_ptr<Shader> Shader::CreateSkyShader() {
+    std::string vertexPath   = "Resources/Shaders/sky.vert";
+    std::string fragmentPath = "Resources/Shaders/sky.frag";
+    std::string vertexSrc = LoadShaderSource(vertexPath);
+    std::string fragmentSrc = LoadShaderSource(fragmentPath);
+    return std::make_shared<Shader>(vertexSrc, fragmentSrc);
+}
+
 } // namespace Kosmic::Renderer
