@@ -51,4 +51,12 @@ void Camera::SetAspectRatio(float ratio) {
     UpdateProjectionMatrix();
 }
 
+float Camera::GetPitch() const {
+    return m_Pitch;
+}
+
+float Camera::GetYaw() const {
+    return m_Yaw;
+}
+
 } // namespace Kosmic::Renderer

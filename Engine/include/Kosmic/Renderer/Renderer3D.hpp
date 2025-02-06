@@ -15,6 +15,7 @@ public:
     void Render();
     void SetCamera(const std::shared_ptr<Camera>& camera);
     void SetMesh(const std::shared_ptr<Mesh>& mesh);
+    static uint64_t GetLastGPUTime();
 
 private:
     class Impl;

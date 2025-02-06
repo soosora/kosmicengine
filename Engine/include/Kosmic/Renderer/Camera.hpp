@@ -20,6 +20,9 @@ public:
     const Math::Mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
     const Math::Vector3& GetPosition() const { return m_Position; }
 
+    float GetPitch() const;
+    float GetYaw() const;
+
 private:
     Math::Vector3 m_Position{0.0f, 0.0f, 3.0f};
     Math::Vector3 m_Front{0.0f, 0.0f, -1.0f};

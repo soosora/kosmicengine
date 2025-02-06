@@ -19,4 +19,5 @@ target_link_libraries(KosmicEngine PUBLIC
     GLEW::GLEW
     EnTT
     glm::glm
+    ImGui
 )
