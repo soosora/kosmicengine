@@ -1,6 +1,7 @@
 #include "Kosmic/Core/Application.hpp"
 #include "Kosmic/Renderer/Renderer3D.hpp"
 #include "Kosmic/Core/Math/Math.hpp"
+#include "Kosmic/Renderer/Mesh.hpp"
 #include <SDL2/SDL.h>
 
 using namespace Kosmic;
@@ -10,8 +11,8 @@ public:
 	SandboxApp() : Application("Sandbox", 800, 600) {}
 
 private:
-    Kosmic::Renderer::Renderer3D renderer;
-    std::shared_ptr<Kosmic::Renderer::Camera> camera;
+    Renderer::Renderer3D renderer;
+    std::shared_ptr<Renderer::Camera> camera;
 
     // Add input handling using SDL
     bool IsKeyPressed(SDL_Keycode key) {
@@ -26,7 +27,7 @@ protected:
 		renderer.Init();
         
         // Setup camera instance
-        camera = std::make_shared<Kosmic::Renderer::Camera>(45.0f, 800.0f/600.0f);
+        camera = std::make_shared<Renderer::Camera>(45.0f, 800.0f/600.0f);
         camera->SetPosition({0.0f, 0.0f, 3.0f});
         renderer.SetCamera(camera);
 	}
@@ -36,11 +37,15 @@ protected:
         // Example: Simple camera movement
         if (IsKeyPressed(SDLK_w)) camera->SetPosition(camera->GetPosition() + Math::Vector3(0.0f, 0.0f, -0.1f));
         if (IsKeyPressed(SDLK_s)) camera->SetPosition(camera->GetPosition() + Math::Vector3(0.0f, 0.0f, 0.1f));
+		if (IsKeyPressed(SDLK_a)) camera->SetPosition(camera->GetPosition() + Math::Vector3(-0.1f, 0.0f, 0.0f));
+		if (IsKeyPressed(SDLK_d)) camera->SetPosition(camera->GetPosition() + Math::Vector3(0.1f, 0.0f, 0.0f));
 	}
 
     // Rendering
 	void OnRender() override {
-		// Render triangle
+		// Example: Render cube
+		renderer.SetMesh(Renderer::MeshLibrary::Cube());
+		// Call render to draw the mesh
 		renderer.Render();
 	}
 

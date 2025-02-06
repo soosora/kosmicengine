@@ -9,7 +9,7 @@ namespace Kosmic::Renderer {
 class Renderer3D::Impl {
 public:
     std::shared_ptr<Shader> shader;
-    std::shared_ptr<Mesh> triangle;
+    std::shared_ptr<Mesh> mesh;
     std::shared_ptr<Camera> camera;
 };
 
@@ -24,14 +24,16 @@ void Renderer3D::Init() {
     // Create and configure shader
     pImpl->shader = Shader::CreateBasicShader();
     
-    // Create triangle mesh
-    pImpl->triangle = Mesh::CreateTriangle();
-
+    
     // Add error checking after OpenGL operations
     GLenum err = glGetError();
     if (err != GL_NO_ERROR) {
         std::cerr << "OpenGL error during Renderer3D initialization: " << err << std::endl;
     }
+}
+
+void Renderer3D::SetMesh(const std::shared_ptr<Mesh>& mesh) {
+    pImpl->mesh = mesh;
 }
 
 void Renderer3D::SetCamera(const std::shared_ptr<Camera>& cam) {
@@ -46,7 +48,13 @@ void Renderer3D::Render() {
     pImpl->shader->Bind();
     pImpl->shader->SetMat4("view", pImpl->camera->GetViewMatrix());
     pImpl->shader->SetMat4("projection", pImpl->camera->GetProjectionMatrix());
-    pImpl->triangle->Draw();
+    
+    if(pImpl->mesh) { // Render provided mesh
+        // Send model transform from Mesh to shader
+        pImpl->shader->SetMat4("model", pImpl->mesh->GetTransform());
+        pImpl->mesh->Draw();
+    }
+    
     pImpl->shader->Unbind();
 }
 

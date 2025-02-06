@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "Camera.hpp"
+#include "Mesh.hpp"
 
 namespace Kosmic::Renderer {
 
@@ -13,6 +14,7 @@ public:
     void Init();
     void Render();
     void SetCamera(const std::shared_ptr<Camera>& camera);
+    void SetMesh(const std::shared_ptr<Mesh>& mesh);
 
 private:
     class Impl;

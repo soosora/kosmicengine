@@ -6,21 +6,28 @@
 namespace {
 const char* basicVertexShader = R"(
     #version 330 core
+    
     layout (location = 0) in vec3 aPos;
     layout (location = 1) in vec3 aColor;
+
+    // Added model uniform
+    uniform mat4 model;
     uniform mat4 view;
     uniform mat4 projection;
+    
     out vec3 vertexColor;
     void main() {
-        gl_Position = projection * view * vec4(aPos, 1.0);
+        gl_Position = projection * view * model * vec4(aPos, 1.0);
         vertexColor = aColor;
     }
 )";
 
 const char* basicFragmentShader = R"(
     #version 330 core
+
     in vec3 vertexColor;
     out vec4 FragColor;
+    
     void main() {
         FragColor = vec4(vertexColor, 1.0);
     }

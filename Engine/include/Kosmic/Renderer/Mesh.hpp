@@ -22,12 +22,10 @@ public:
     void Unbind() const;
     void Draw() const;
 
-    static std::shared_ptr<Mesh> CreateTriangle();
-    static std::shared_ptr<Mesh> CreateCube();
-    static std::shared_ptr<Mesh> CreateQuad();
-
     // Add transform support
     void SetTransform(const Math::Mat4& transform);
+
+    const Math::Mat4& GetTransform() const;
 
 private:
     void SetupMesh();
@@ -40,3 +38,9 @@ private:
 };
 
 } // namespace Kosmic::Renderer
+
+namespace Kosmic::Renderer::MeshLibrary {
+    std::shared_ptr<Mesh> Cube();
+    std::shared_ptr<Mesh> Triangle();
+    std::shared_ptr<Mesh> Quad();
+} // namespace Kosmic::Renderer::MeshLibrary
