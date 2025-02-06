@@ -1,6 +1,7 @@
 #include "Kosmic/Core/Application.hpp"
 #include <GL/glew.h>
 #include <SDL2/SDL_opengl.h>
+#include "Kosmic/Core/Logging.hpp"
 #include <iostream>
 
 namespace Kosmic {
@@ -9,7 +10,7 @@ Application::Application(const std::string& title, int width, int height)
     : m_Running(false), m_Window(nullptr), m_LastFrameTime(0) {
     
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        std::cerr << "Error initializing SDL: " << SDL_GetError() << std::endl;
+        KOSMIC_ERROR("Error initializing SDL: {}", SDL_GetError());
         return;
     }
 
@@ -27,21 +28,21 @@ Application::Application(const std::string& title, int width, int height)
     );
 
     if (!m_Window) {
-        std::cerr << "Error creating window: " << SDL_GetError() << std::endl;
+        KOSMIC_ERROR("Error creating window: {}", SDL_GetError());
         return;
     }
 
     // Cria contexto OpenGL
     m_GLContext = SDL_GL_CreateContext(m_Window);
     if (!m_GLContext) {
-        std::cerr << "Error creating OpenGL context: " << SDL_GetError() << std::endl;
+        KOSMIC_ERROR("Error creating OpenGL context: {}", SDL_GetError());
         return;
     }
 
     // Inicializa GLEW
     GLenum err = glewInit();
     if (err != GLEW_OK) {
-        std::cerr << "Error initializing GLEW: " << glewGetErrorString(err) << std::endl;
+        KOSMIC_ERROR("Error initializing GLEW: {}", reinterpret_cast<const char*>(glewGetErrorString(err)));
         return;
     }
 
@@ -56,6 +57,7 @@ Application::~Application() {
 
 void Application::Run() {
     m_Running = true;
+    KOSMIC_INFO("Application starting...");
     OnInit();
 
     while (m_Running) {
@@ -80,6 +82,7 @@ void Application::Run() {
     }
 
     OnCleanup();
+    KOSMIC_INFO("Application terminated.");
 }
 
 } // namespace Kosmic

@@ -2,6 +2,7 @@
 #include "Kosmic/Renderer/Renderer3D.hpp"
 #include "Kosmic/Core/Math/Math.hpp"
 #include "Kosmic/Renderer/Mesh.hpp"
+#include "Kosmic/Core/Logging.hpp"
 #include <SDL2/SDL.h>
 
 using namespace Kosmic;
@@ -23,13 +24,16 @@ private:
 protected:
     // Initialization
 	void OnInit() override {
+		KOSMIC_INFO("SandboxApp OnInit called.");
 		// Initialize the 3D renderer
 		renderer.Init();
+		KOSMIC_INFO("Renderer3D initialized.");
         
         // Setup camera instance
         camera = std::make_shared<Renderer::Camera>(45.0f, 800.0f/600.0f);
         camera->SetPosition({0.0f, 0.0f, 3.0f});
         renderer.SetCamera(camera);
+		KOSMIC_INFO("Camera setup complete.");
 	}
 	
     // Update logic
@@ -39,6 +43,11 @@ protected:
         if (IsKeyPressed(SDLK_s)) camera->SetPosition(camera->GetPosition() + Math::Vector3(0.0f, 0.0f, 0.1f));
 		if (IsKeyPressed(SDLK_a)) camera->SetPosition(camera->GetPosition() + Math::Vector3(-0.1f, 0.0f, 0.0f));
 		if (IsKeyPressed(SDLK_d)) camera->SetPosition(camera->GetPosition() + Math::Vector3(0.1f, 0.0f, 0.0f));
+		if (IsKeyPressed(SDLK_SPACE)) camera->SetPosition(camera->GetPosition() + Math::Vector3(0.0f, 0.1f, 0.0f));
+		if (IsKeyPressed(SDLK_LSHIFT)) camera->SetPosition(camera->GetPosition() + Math::Vector3(0.0f, -0.1f, 0.0f));
+
+		//if (IsKeyPressed(SDLK_q)) camera->Rotate(Math::Vector3(0.0f, -0.1f, 0.0f));
+		//if (IsKeyPressed(SDLK_e)) camera->Rotate(Math::Vector3(0.0f, 0.1f, 0.0f));
 	}
 
     // Rendering
@@ -54,7 +63,10 @@ protected:
 };
 
 int main() {
+    Kosmic::Log::Init(); // Initialize logger
+	KOSMIC_INFO("Starting SandboxApp...");
 	SandboxApp app;
 	app.Run();
+	KOSMIC_INFO("SandboxApp terminated.");
 	return 0;
 }

@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include "Kosmic/Renderer/Shader.hpp"
 #include <SDL2/SDL_opengl.h>
+#include "Kosmic/Core/Logging.hpp"
 #include <iostream>
 
 namespace {
@@ -70,7 +71,7 @@ GLuint Shader::CompileShader(GLenum type, const std::string& source) {
     if (status != GL_TRUE) {
         char buffer[512];
         glGetShaderInfoLog(shader, 512, nullptr, buffer);
-        std::cerr << "Error compiling shader: " << buffer << std::endl;
+        KOSMIC_ERROR("Error compiling shader: {}", buffer);
     }
     return shader;
 }
@@ -87,7 +88,7 @@ GLuint Shader::LinkProgram(GLuint vertexShader, GLuint fragmentShader) {
     if (status != GL_TRUE) {
         char buffer[512];
         glGetProgramInfoLog(program, 512, nullptr, buffer);
-        std::cerr << "Error linking shader program: " << buffer << std::endl;
+        KOSMIC_ERROR("Error linking shader program: {}", buffer);
     }
     return program;
 }

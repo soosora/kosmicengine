@@ -2,6 +2,7 @@
 #include "Kosmic/Renderer/Shader.hpp"
 #include "Kosmic/Renderer/Mesh.hpp"
 #include <GL/glew.h>
+#include "Kosmic/Core/Logging.hpp"
 #include <iostream>
 
 namespace Kosmic::Renderer {
@@ -28,8 +29,9 @@ void Renderer3D::Init() {
     // Add error checking after OpenGL operations
     GLenum err = glGetError();
     if (err != GL_NO_ERROR) {
-        std::cerr << "OpenGL error during Renderer3D initialization: " << err << std::endl;
+        KOSMIC_ERROR("OpenGL error during Renderer initialization: {}", err);
     }
+    KOSMIC_INFO("Renderer initialization completed.");
 }
 
 void Renderer3D::SetMesh(const std::shared_ptr<Mesh>& mesh) {
