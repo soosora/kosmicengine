@@ -8,9 +8,11 @@ const char* basicVertexShader = R"(
     #version 330 core
     layout (location = 0) in vec3 aPos;
     layout (location = 1) in vec3 aColor;
+    uniform mat4 view;
+    uniform mat4 projection;
     out vec3 vertexColor;
     void main() {
-        gl_Position = vec4(aPos, 1.0);
+        gl_Position = projection * view * vec4(aPos, 1.0);
         vertexColor = aColor;
     }
 )";
@@ -81,6 +83,12 @@ GLuint Shader::LinkProgram(GLuint vertexShader, GLuint fragmentShader) {
         std::cerr << "Error linking shader program: " << buffer << std::endl;
     }
     return program;
+}
+
+void Shader::SetMat4(const std::string& name, const Math::Mat4& matrix) {
+    // Obtain uniform location and set the matrix
+    GLint location = glGetUniformLocation(m_ShaderID, name.c_str());
+    glUniformMatrix4fv(location, 1, GL_FALSE, &matrix[0][0]);
 }
 
 std::shared_ptr<Shader> Shader::CreateBasicShader() {

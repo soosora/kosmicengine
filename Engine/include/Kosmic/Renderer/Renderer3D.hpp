@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include "Camera.hpp"
 
 namespace Kosmic::Renderer {
 
@@ -11,6 +12,7 @@ public:
 
     void Init();
     void Render();
+    void SetCamera(const std::shared_ptr<Camera>& camera);
 
 private:
     class Impl;

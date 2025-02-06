@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Kosmic/Core/Math/Math.hpp"
 #include <string>
 #include <memory>
 
@@ -19,10 +19,12 @@ public:
 
     static std::shared_ptr<Shader> CreateBasicShader();
 
+    void SetMat4(const std::string& name, const Math::Mat4& matrix);
+
 private:
     GLuint m_ShaderID;
-    GLuint CompileShader(GLenum type, const std::string& source);
-    GLuint LinkProgram(GLuint vertexShader, GLuint fragmentShader);
+    static GLuint CompileShader(GLenum type, const std::string& source);
+    static GLuint LinkProgram(GLuint vertexShader, GLuint fragmentShader);
 };
 
 } // namespace Kosmic::Renderer

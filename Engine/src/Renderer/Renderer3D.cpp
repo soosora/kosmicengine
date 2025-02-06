@@ -10,6 +10,7 @@ class Renderer3D::Impl {
 public:
     std::shared_ptr<Shader> shader;
     std::shared_ptr<Mesh> triangle;
+    std::shared_ptr<Camera> camera;
 };
 
 Renderer3D::Renderer3D() : pImpl(std::make_unique<Impl>()) {}
@@ -33,12 +34,18 @@ void Renderer3D::Init() {
     }
 }
 
+void Renderer3D::SetCamera(const std::shared_ptr<Camera>& cam) {
+    pImpl->camera = cam;
+}
+
 void Renderer3D::Render() {
     // Clears the buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     // Use shader and render
     pImpl->shader->Bind();
+    pImpl->shader->SetMat4("view", pImpl->camera->GetViewMatrix());
+    pImpl->shader->SetMat4("projection", pImpl->camera->GetProjectionMatrix());
     pImpl->triangle->Draw();
     pImpl->shader->Unbind();
 }
