@@ -18,7 +18,11 @@ if(BUILD_TYPE_INDEX EQUAL -1)
     message(FATAL_ERROR "Unknown build type: ${CMAKE_BUILD_TYPE}. Choose between Debug or Release.")
 endif()
 
-set(CMAKE_CXX_FLAGS_Lançamento "${CMAKE_CXX_FLAGS_RELEASE}" CACHE STRING "Launch build flags" FORCE)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_RELEASE}" CACHE STRING "Launch build flags" FORCE)
+
+# Copy the `Resources` directory to the Build directory
+file(COPY ${CMAKE_SOURCE_DIR}/Resources
+    DESTINATION ${CMAKE_BINARY_DIR})
 
 find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
