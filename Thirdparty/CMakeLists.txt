@@ -10,7 +10,7 @@ set(IMGUI_SOURCES
 )
 
 add_library(ImGui STATIC ${IMGUI_SOURCES})
-target_include_directories(ImGui PUBLIC 
+target_include_directories(ImGui PUBLIC
     imgui
     imgui/backends
 )
@@ -32,15 +32,14 @@ set(SPDLOG_BUILD_BENCH OFF)
 
 # assimp
 add_subdirectory(assimp)
-if(TARGET assimp)
-    target_compile_options(assimp PRIVATE -Wno-error=maybe-uninitialized)
-endif()
+set(ASSIMP_INSTALL OFF)
+set(ASSIMP_WARNINGS_AS_ERRORS OFF)
 
 add_library(ThirdpartyLibs INTERFACE)
 target_link_libraries(ThirdpartyLibs INTERFACE
     ImGui
-    stb
     EnTT
     spdlog::spdlog
     assimp
+    stb
 )
