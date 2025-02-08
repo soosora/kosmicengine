@@ -30,10 +30,17 @@ set(SPDLOG_BUILD_EXAMPLES OFF)
 set(SPDLOG_BUILD_TESTS OFF)
 set(SPDLOG_BUILD_BENCH OFF)
 
+# assimp
+add_subdirectory(assimp)
+if(TARGET assimp)
+    target_compile_options(assimp PRIVATE -Wno-error=maybe-uninitialized)
+endif()
+
 add_library(ThirdpartyLibs INTERFACE)
 target_link_libraries(ThirdpartyLibs INTERFACE
     ImGui
     stb
     EnTT
     spdlog::spdlog
+    assimp
 )

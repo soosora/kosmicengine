@@ -1,7 +1,7 @@
 find_package(GLEW REQUIRED)
 find_package(glm REQUIRED)
 
-add_library(KosmicEngine 
+add_library(KosmicEngine
     src/Core/Application.cpp
     src/Core/Input.cpp
     src/Renderer/Shader.cpp
@@ -9,6 +9,8 @@ add_library(KosmicEngine
     src/Renderer/Mesh.cpp
     src/Renderer/Camera.cpp
     src/Renderer/Texture.cpp
+    src/Assets/Model.cpp
+    src/Assets/Material.cpp
 )
 
 target_include_directories(KosmicEngine PUBLIC 
@@ -22,4 +24,10 @@ target_link_libraries(KosmicEngine PUBLIC
     EnTT
     glm::glm
     ImGui
+    assimp
 )
+
+if(WIN32)
+    # Link Windows OpenGL library explicitly
+    target_link_libraries(KosmicEngine PRIVATE opengl32)
+endif()

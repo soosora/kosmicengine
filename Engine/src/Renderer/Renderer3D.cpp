@@ -1,7 +1,6 @@
 #include "Kosmic/Renderer/Renderer3D.hpp"
 #include "Kosmic/Renderer/Shader.hpp"
 #include "Kosmic/Renderer/Mesh.hpp"
-#include <GL/glew.h>
 #include "Kosmic/Core/Logging.hpp"
 #include <iostream>
 #include <cstdint>
@@ -31,8 +30,11 @@ Renderer3D::~Renderer3D() {
 
 void Renderer3D::Init() {
     // Initial OpenGL Settings for 3D Rendering
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
+    glEnable(GL_DEPTH_TEST); // Enable depth testing
+    glDepthFunc(GL_LESS);    // Depth testing function
+    glEnable(GL_CULL_FACE);  // Enable face culling
+    glCullFace(GL_BACK);     // Cull back faces
+    glFrontFace(GL_CCW);     // Counter-clockwise winding order
 
     // Create and configure shader
     pImpl->shader = Shader::CreateBasicShader();
@@ -81,16 +83,15 @@ void Renderer3D::RenderSky() {
 }
 
 void Renderer3D::Render() {
-    // Clears the buffers
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
     // Begin GPU timing query
     glBeginQuery(GL_TIME_ELAPSED, pImpl->queryID);
+    
+    // Clear buffers at start of frame
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     // Render procedural sky first (does not affect scene depth)
     RenderSky();
     
-    // Use shader and render
     pImpl->shader->Bind();
     // Set texture uniform
     pImpl->shader->SetInt("u_Texture", 0);
@@ -98,7 +99,6 @@ void Renderer3D::Render() {
     pImpl->shader->SetMat4("projection", pImpl->camera->GetProjectionMatrix());
     
     if(pImpl->mesh) { // Render provided mesh
-        // Send model transform from Mesh to shader
         pImpl->shader->SetMat4("model", pImpl->mesh->GetTransform());
         pImpl->mesh->Draw();
     }

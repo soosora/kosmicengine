@@ -6,6 +6,7 @@
 #include "Kosmic/Core/Logging.hpp"
 #include "Kosmic/Renderer/Lighting.hpp"
 #include "Kosmic/Core/Input.hpp"
+#include "Kosmic/Assets/Model.hpp"
 
 using namespace Kosmic;
 
@@ -17,6 +18,7 @@ private:
     Renderer::Renderer3D renderer;
     std::shared_ptr<Renderer::Camera> camera;
     std::shared_ptr<Renderer::Texture> texture;
+    std::shared_ptr<Assets::Model> model;
     
     Renderer::Lighting::AmbientLight ambientLight;
     Renderer::Lighting::DirectionalLight dirLight;
@@ -36,8 +38,12 @@ protected:
 		KOSMIC_INFO("(Sandbox) Camera setup complete.");
 
 		// Load texture
-		texture = std::make_shared<Renderer::Texture>("resources/texture.png");
+		texture = std::make_shared<Renderer::Texture>("Resources/Textures/kosmic.png");
 		KOSMIC_INFO("(Sandbox) Texture loaded.");
+        
+        // Load 3D model
+        model = std::make_shared<Assets::Model>("Resources/Models/cottage_obj.obj");
+        KOSMIC_INFO("(Sandbox) Model loaded.");
         
         // Initialize lighting (in white for ambient and directional)
         ambientLight.color = {1.0f, 1.0f, 1.0f};
@@ -81,28 +87,29 @@ protected:
 
     // Rendering
 	void OnRender() override {
-		// Bind texture to slot 0
-		texture->Bind(0);
+        // Configure lighting uniforms via shader
+        auto shader = renderer.GetShader();
+        shader->Bind();
+        shader->SetVec3("u_AmbientLightColor", ambientLight.color);
+        shader->SetFloat("u_AmbientLightIntensity", ambientLight.intensity);
+        shader->SetVec3("u_DirLightDirection", dirLight.direction);
+        shader->SetVec3("u_DirLightColor", dirLight.color);
+        shader->SetFloat("u_DirLightIntensity", dirLight.intensity);
+        shader->Unbind();
         
-        // Configure lighting uniforms via shader obtained from renderer
-        {
-            auto shader = renderer.GetShader();
-            shader->Bind();
-            shader->SetVec3("u_AmbientLightColor", ambientLight.color);
-            shader->SetFloat("u_AmbientLightIntensity", ambientLight.intensity);
-            shader->SetVec3("u_DirLightDirection", dirLight.direction);
-            shader->SetVec3("u_DirLightColor", dirLight.color);
-            shader->SetFloat("u_DirLightIntensity", dirLight.intensity);
-            shader->Unbind();
+        // Bind texture
+        texture->Bind(0);
+        
+        // Render scene
+        renderer.Render();
+        
+        // Draw imported model with same shader
+        if (model) {
+            model->Draw(shader);
         }
         
-		// Example: Render cube
-		renderer.SetMesh(Renderer::MeshLibrary::Cube());
-		// Render procedural sky
-		renderer.Render();
-		// Unbind texture
-		texture->Unbind();
-	}
+        texture->Unbind();
+    }
 
     // Cleaning
 	void OnCleanup() override {}

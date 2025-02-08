@@ -4,6 +4,7 @@
 #include "Camera.hpp"
 #include "Mesh.hpp"
 #include "Shader.hpp"
+#include <GL/glew.h>
 
 namespace Kosmic::Renderer {
 

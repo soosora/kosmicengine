@@ -17,3 +17,8 @@
     path = Thirdparty/spdlog
     url = https://github.com/gabime/spdlog.git
     branch = v1.x
+
+[submodule "Thirdparty/assimp"]
+    path = Thirdparty/assimp
+    url = https://github.com/assimp/assimp.git
+    branch = v5.4.3

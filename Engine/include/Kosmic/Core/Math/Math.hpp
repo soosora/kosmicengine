@@ -32,6 +32,7 @@ struct Vector3 {
     float x{}, y{}, z{};
     Vector3() = default;
     Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
+    Vector3(float value) : x(value), y(value), z(value) {}
 
     // Operators
     Vector3 operator+(const Vector3& other) const { return { x + other.x, y + other.y, z + other.z }; }
@@ -142,6 +143,16 @@ inline Vector3 Cross(const Vector3& a, const Vector3& b) {
         a.z * b.x - a.x * b.z,
         a.x * b.y - a.y * b.x
     };
+}
+
+// Translate a matrix
+inline Mat4 Translate(const Mat4& matrix, const Vector3& translation) {
+    return glm::translate(matrix, glm::vec3(translation.x, translation.y, translation.z));
+}
+
+// Scale a matrix
+inline Mat4 Scale(const Mat4& matrix, const Vector3& scale) {
+    return glm::scale(matrix, glm::vec3(scale.x, scale.y, scale.z));
 }
 
 } // namespace Kosmic::Math
