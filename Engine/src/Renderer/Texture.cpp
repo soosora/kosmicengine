@@ -1,7 +1,7 @@
 #include "Kosmic/Renderer/Texture.hpp"
 #include <GL/glew.h>
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb/stb_image.h"
+#include <stb_image.h>
 #include "Kosmic/Core/Logging.hpp"
 
 namespace Kosmic::Renderer {
