@@ -30,6 +30,7 @@ target_link_libraries(KosmicEngine PUBLIC
     ImGui
     assimp
     stb
+    spdlog::spdlog
 )
 
 if(WIN32)
