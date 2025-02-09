@@ -13,7 +13,7 @@ add_library(KosmicEngine
     src/Assets/Material.cpp
 )
 
-target_include_directories(KosmicEngine PUBLIC 
+target_include_directories(KosmicEngine PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
@@ -25,6 +25,7 @@ target_link_libraries(KosmicEngine PUBLIC
     glm::glm
     ImGui
     assimp
+    stb
 )
 
 if(WIN32)
