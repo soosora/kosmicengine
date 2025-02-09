@@ -20,14 +20,14 @@ set(IMGUI_SOURCES
 
 # ImGui configuration with proper Debug/Release settings
 add_library(ImGui STATIC ${IMGUI_SOURCES})
-target_include_directories(ImGui PUBLIC 
+target_include_directories(ImGui PUBLIC
     imgui
     imgui/backends
 )
 
 # Explicit configuration for ImGui
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    target_compile_definitions(ImGui PRIVATE 
+    target_compile_definitions(ImGui PRIVATE
         IMGUI_DEBUG
         _DEBUG
     )
@@ -55,6 +55,7 @@ set(SPDLOG_BUILD_BENCH OFF)
 set(SPDLOG_BUILD_DEBUG ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
 
 # assimp
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_SAMPLES OFF CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_DOCS OFF CACHE BOOL "" FORCE)
