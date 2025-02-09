@@ -38,13 +38,26 @@ void Renderer3D::Init() {
 
     // Create and configure shader
     pImpl->shader = Shader::CreateBasicShader();
+    pImpl->shader->Bind();
     
-    // Create sky shader and sky mesh (a cube used for sky dome)
+    // Set default lighting parameters
+    pImpl->shader->SetVec3("u_AmbientLightColor", Math::Vector3(1.0f));
+    pImpl->shader->SetFloat("u_AmbientLightIntensity", 0.7f);
+    pImpl->shader->SetVec3("u_DirLightDirection", Math::Vector3(-0.2f, -1.0f, -0.3f));
+    pImpl->shader->SetVec3("u_DirLightColor", Math::Vector3(1.0f));
+    pImpl->shader->SetFloat("u_DirLightIntensity", 0.3f);
+    
+    pImpl->shader->Unbind();
+    
+    // Create sky shader and sky mesh (a sphere used for sky dome)
     pImpl->skyShader = Shader::CreateSkyShader();
-    pImpl->skyMesh   = MeshLibrary::Cube();
+    pImpl->skyMesh   = MeshLibrary::Sphere();
     
     // Create OpenGL query object for GPU timing
     glGenQueries(1, &pImpl->queryID);
+    
+    // Set default clear color to dark gray
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     
     // Add error checking after OpenGL operations
     GLenum err = glGetError();
@@ -89,10 +102,14 @@ void Renderer3D::Render() {
     // Clear buffers at start of frame
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    // Render procedural sky first (does not affect scene depth)
+    // Render procedural sky first
     RenderSky();
     
     pImpl->shader->Bind();
+    
+    // Set default white color for objects without texture
+    pImpl->shader->SetVec4("u_Color", Math::Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+    
     // Set texture uniform
     pImpl->shader->SetInt("u_Texture", 0);
     pImpl->shader->SetMat4("view", pImpl->camera->GetViewMatrix());

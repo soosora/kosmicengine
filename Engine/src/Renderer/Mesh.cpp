@@ -117,4 +117,59 @@ std::shared_ptr<Mesh> Triangle() {
     return std::make_shared<Mesh>(vertices, indices);
 }
 
+std::shared_ptr<Mesh> Sphere() {
+    const unsigned int sectorCount = 36;
+    const unsigned int stackCount = 18;
+    std::vector<Vertex> vertices;
+    std::vector<uint32_t> indices;
+
+    float x, y, z, xy;
+    float nx, ny, nz, lengthInv = 1.0f;
+    float s, t;
+
+    for (unsigned int i = 0; i <= stackCount; ++i) {
+        float stackAngle = Math::PI / 2 - i * Math::PI / stackCount;
+        xy = cosf(stackAngle);
+        z = sinf(stackAngle);
+
+        for (unsigned int j = 0; j <= sectorCount; ++j) {
+            float sectorAngle = j * 2 * Math::PI / sectorCount;
+            x = xy * cosf(sectorAngle);
+            y = xy * sinf(sectorAngle);
+            nx = x * lengthInv;
+            ny = y * lengthInv;
+            nz = z * lengthInv;
+            s = static_cast<float>(j) / sectorCount;
+            t = static_cast<float>(i) / stackCount;
+
+            Vertex vert;
+            vert.Position = { x, y, z };
+            vert.Color = { 1.0f, 1.0f, 1.0f };
+            vert.TexCoords = { s, t };
+            vert.Normal = { nx, ny, nz };
+            vertices.push_back(vert);
+        }
+    }
+
+    for (unsigned int i = 0; i < stackCount; ++i) {
+        unsigned int k1 = i * (sectorCount + 1);
+        unsigned int k2 = k1 + sectorCount + 1;
+
+        for (unsigned int j = 0; j < sectorCount; ++j, ++k1, ++k2) {
+            if (i != 0) {
+                indices.push_back(k1);
+                indices.push_back(k2);
+                indices.push_back(k1 + 1);
+            }
+            if (i != (stackCount - 1)) {
+                indices.push_back(k1 + 1);
+                indices.push_back(k2);
+                indices.push_back(k2 + 1);
+            }
+        }
+    }
+
+    return std::make_shared<Mesh>(vertices, indices);
+}
+
 } // namespace Kosmic::Renderer

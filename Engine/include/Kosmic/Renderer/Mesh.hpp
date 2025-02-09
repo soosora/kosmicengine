@@ -43,4 +43,5 @@ namespace Kosmic::Renderer::MeshLibrary {
     std::shared_ptr<Mesh> Cube();
     std::shared_ptr<Mesh> Triangle();
     std::shared_ptr<Mesh> Quad();
+    std::shared_ptr<Mesh> Sphere();
 } // namespace Kosmic::Renderer::MeshLibrary

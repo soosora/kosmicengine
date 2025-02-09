@@ -22,6 +22,7 @@ public:
 
     void SetMat4(const std::string& name, const Math::Mat4& matrix);
     void SetVec3(const std::string& name, const Math::Vector3& value);
+    void SetVec4(const std::string& name, const Math::Vector4& value);
     void SetFloat(const std::string& name, float value);
     void SetInt(const std::string& name, int value);
 

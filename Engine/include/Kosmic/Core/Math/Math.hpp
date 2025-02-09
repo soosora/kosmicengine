@@ -12,6 +12,8 @@ namespace Kosmic::Math {
 
 using Mat4 = glm::mat4;
 
+const float PI = 3.14159265359f;
+
 // Vector2
 struct Vector2 {
     float x{}, y{};

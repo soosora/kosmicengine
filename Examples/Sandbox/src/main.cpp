@@ -7,6 +7,7 @@
 #include "Kosmic/Renderer/Lighting.hpp"
 #include "Kosmic/Core/Input.hpp"
 #include "Kosmic/Assets/Model.hpp"
+#include "Kosmic/ECS/ECS.hpp"
 
 using namespace Kosmic;
 
@@ -51,6 +52,12 @@ protected:
         dirLight.direction = { -0.2f, -1.0f, -0.3f };
         dirLight.color = {1.0f, 1.0f, 1.0f};
         dirLight.intensity = 0.7f;
+        
+        // ECS initialization: create an entity with a Transform component
+        auto& registry = ECS::ECSManager::GetRegistry();
+        auto entity = registry.create();
+        registry.emplace<ECS::Transform>(entity);
+        KOSMIC_INFO("(Sandbox) [ECS]: Created entity with Transform component.");
 	}
 	
     // Update logic
@@ -67,8 +74,8 @@ protected:
         if (Input::IsKeyPressed(SDLK_s)) pos = pos - forward * speed;
         if (Input::IsKeyPressed(SDLK_d)) pos = pos + right   * speed;
         if (Input::IsKeyPressed(SDLK_a)) pos = pos - right   * speed;
-        if (Input::IsKeyPressed(SDLK_SPACE)) pos = pos + up   * speed;
-        if (Input::IsKeyPressed(SDLK_LSHIFT)) pos = pos - up  * speed;
+        if (Input::IsKeyPressed(SDLK_SPACE)) pos = pos + up  * speed;
+        if (Input::IsKeyPressed(SDLK_LSHIFT)) pos = pos - up * speed;
         
         camera->SetPosition(pos);
         
@@ -76,7 +83,7 @@ protected:
         float currentYaw   = camera->GetYaw();
         
         int mouseDeltaX, mouseDeltaY;
-        Kosmic::Input::GetMouseDelta(mouseDeltaX, mouseDeltaY);
+        Input::GetMouseDelta(mouseDeltaX, mouseDeltaY);
         if (mouseDeltaX || mouseDeltaY) {
             float sensitivity = 0.1f;
             currentYaw   += mouseDeltaX * sensitivity;
