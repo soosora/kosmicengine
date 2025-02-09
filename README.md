@@ -1,4 +1,4 @@
-# Kosmic Engine [![🐧 Linux Build 🐧](https://github.com/LucasSnatiago/kosmicengine/actions/workflows/cmake-multi-platform.yml/badge.svg)](https://github.com/LucasSnatiago/kosmicengine/actions/workflows/cmake-multi-platform.yml)
+# Kosmic Engine [![🐧 Linux Build 🐧](https://github.com/soosora/kosmicengine/actions/workflows/cmake-multi-platform.yml/badge.svg)](https://github.com/soosora/kosmicengine/actions/workflows/cmake-multi-platform.yml)
 
 Welcome to the **Kosmic Engine** repository! A 3D game engine made with C++23 and OpenGL 3.3.
 
