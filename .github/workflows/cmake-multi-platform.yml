@@ -24,6 +24,7 @@ jobs:
         sudo apt install -y \
           mesa-utils \
           libsdl2-dev \
+          libglm-dev \
           libglew-dev \
           g++ \
           gcc
