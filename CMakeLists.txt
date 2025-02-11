@@ -5,9 +5,19 @@ project(KosmicEngine
     LANGUAGES CXX
 )
 
-# Use ccache to speed up compilation
-set(CMAKE_C_COMPILER_LAUNCHER ccache)
-set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
+# Enable ccache usage option
+option(USE_CCACHE "Enable ccache usage" ON)
+
+# Use ccache to speed up compilation if enabled
+if(USE_CCACHE)
+    find_program(CCACHE_PROGRAM ccache)
+    if(CCACHE_PROGRAM)
+        set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
+        set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
+    else()
+        message(WARNING "ccache enabled, but not found. Continuing without ccache.")
+    endif()
+endif()
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

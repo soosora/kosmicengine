@@ -1,6 +1,13 @@
-# Use ccache to speed up compilation
-set(CMAKE_C_COMPILER_LAUNCHER ccache)
-set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
+# Use ccache to speed up compilation if enabled
+if(USE_CCACHE)
+    find_program(CCACHE_PROGRAM ccache)
+    if(CCACHE_PROGRAM)
+        set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
+        set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
+    else()
+        message(WARNING "ccache enabled, but not found. Continuing without ccache.")
+    endif()
+endif()
 
 add_executable(Pong src/main.cpp)
 
