@@ -47,10 +47,12 @@ protected:
         KOSMIC_INFO("[Pong] OnInit called.");
         renderer.Init();
         
-        // Setup camera (positioned to see the 2D game plane)
+        // Setup camera for orthographic view
         camera = std::make_shared<Camera>(60.0f, 800.0f / 600.0f);
         camera->SetPosition({0.0f, 0.0f, 10.0f});
         camera->SetRotation(0.0f, -90.0f);
+        // Orthographic projection; using half of gameHeight (8.0/2 = 4.0f)
+        camera->SetOrthographic(true, 4.0f);
         renderer.SetCamera(camera);
 
         // Create game objects

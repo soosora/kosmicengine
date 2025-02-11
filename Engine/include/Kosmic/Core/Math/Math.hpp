@@ -157,4 +157,13 @@ inline Mat4 Scale(const Mat4& matrix, const Vector3& scale) {
     return glm::scale(matrix, glm::vec3(scale.x, scale.y, scale.z));
 }
 
+// LookAt matrix
+inline Mat4 LookAt(const Vector3& position, const Vector3& target, const Vector3& up) {
+    return glm::lookAt(
+        glm::vec3(position.x, position.y, position.z),
+        glm::vec3(target.x, target.y, target.z),
+        glm::vec3(up.x, up.y, up.z)
+    );
+}
+
 } // namespace Kosmic::Math

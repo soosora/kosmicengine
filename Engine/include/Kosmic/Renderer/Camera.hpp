@@ -5,7 +5,7 @@ namespace Kosmic::Renderer {
 
 class Camera {
 public:
-    Camera(float fov = 45.0f, float aspectRatio = 16.0f/9.0f, float nearPlane = 0.1f, float farPlane = 100.0f);
+    Camera(float fov = 45.0f, float aspectRatio = 16.0f/9.0f, float nearPlane = 0.1f, float farPlane = 100.0f, bool isOrtho = false, float orthoSize = 5.0f);
 
     // Camera movement
     void SetPosition(const Math::Vector3& position);
@@ -14,10 +14,12 @@ public:
     // Camera properties
     void SetFOV(float fov);
     void SetAspectRatio(float ratio);
+    void SetOrthographic(bool isOrtho, float orthoSize);
 
     // Get matrices and vectors
     const Math::Mat4& GetViewMatrix() const { return m_ViewMatrix; }
     const Math::Mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
+    const Math::Mat4 GetSkyboxProjectionMatrix() const;
     const Math::Mat4 GetViewMatrixNoTranslation() const;
     const Math::Vector3& GetPosition() const { return m_Position; }
     const Math::Vector3& GetFront() const { return m_Front; }
@@ -37,6 +39,8 @@ private:
     float m_AspectRatio;
     float m_NearPlane;
     float m_FarPlane;
+    bool m_IsOrthographic;
+    float m_OrthoSize;
 
     Math::Mat4 m_ViewMatrix{1.0f};
     Math::Mat4 m_ProjectionMatrix{1.0f};

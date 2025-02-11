@@ -83,7 +83,7 @@ void Renderer3D::RenderSky() {
     
     pImpl->skyShader->Bind();
     pImpl->skyShader->SetMat4("view", pImpl->camera->GetViewMatrixNoTranslation());
-    pImpl->skyShader->SetMat4("projection", pImpl->camera->GetProjectionMatrix());
+    pImpl->skyShader->SetMat4("projection", pImpl->camera->GetSkyboxProjectionMatrix());
     
     pImpl->skyMesh->Draw();
     
