@@ -1,6 +1,6 @@
 # Kosmic Engine [![🐧 Linux Build 🐧](https://github.com/soosora/kosmicengine/actions/workflows/cmake-multi-platform.yml/badge.svg)](https://github.com/soosora/kosmicengine/actions/workflows/cmake-multi-platform.yml)
 
-Bem-vindo ao repositório da **Kosmic Engine**! Uma game-engine 3D feita em C++23 e OpenGL 3.3.
+Oiee! Bem-vindo(a) ao repositório da **Kosmic Engine**! Uma game-engine 3D feita em C++23 e OpenGL 3.3.
 
 ## Localização
 [English](../../README.md)
@@ -8,26 +8,40 @@ Bem-vindo ao repositório da **Kosmic Engine**! Uma game-engine 3D feita em C++2
 ## Estrutura do Projeto
 
 - **Docs:**  
-    Contém a documentação a Kosmic.
+    Contém a documentação da Kosmic.
 
 - **Engine:**  
-    Possui o código da engine, como o core.
+    Possui o código da biblioteca principal da engine.
 
-- **Sandbox:**  
-    Utilizado para testar novas features e identificar bugs.
+- **Examples:**  
+    - Sandbox: Utilizado para testar novas features e identificar bugs.
+    - Pong: Implementação simples do Pong.
 
 - **Thirdparty:**  
-    Contém bibliotecas externas necessárias para o funcionamento da engine. Essas dependências podem ser compiladas ou integradas diretamente.
+    Contém bibliotecas externas necessárias para o funcionamento da engine.
 
 ## Features Atuais
 
 - **Sistema de Renderização:**  
-    Suporta renderização com foco em 3D, com suporte a shaders e iluminação básica.
+    Suporte a renderização com o foco em 3D, com iluminações básicas.
 
 - **Gerenciamento de Recursos:**  
-    Sistema de carregamento e gerenciamento de assets 3D utilizando a biblioteca `assimp`
+    Sistema de carregamento e gerenciamento de assets 3D utilizando a biblioteca `assimp`.
+
+## Dependências
+
+- assimp: Carregamento de assets 3D.
+- SDL2: gerenciamento de janelas e input.
+- glad: carregamento do OpenGL.
+- glm: matemática.
+- spdlog: logging.
+- stb_image: carregamento de imagens.
+- imgui: GUI.
+- entt: ECS.
 
 ## Como Compilar a Kosmic
+
+### Linux
 
 Para compilar o projeto, siga as instruções abaixo:
 
@@ -58,10 +72,10 @@ Para compilar o projeto, siga as instruções abaixo:
      ou
 
      ```
-     make -$(nproc)
+     make -j$(nproc)
      ```
 
-Caso precise personalizar a compilação (por exemplo, selecionando o modo de build Debug ou Release), passe as opções adequadas ao comando `cmake`, por exemplo:
+Caso precise personalizar a compilação (por exemplo, selecionando o modo de build Debug ou Release), passe as opções adequadas ao comando `cmake`:
 
 ```
 cmake -DCMAKE_BUILD_TYPE=Release ..
@@ -71,4 +85,4 @@ cmake -DCMAKE_BUILD_TYPE=Release ..
 
 Sinta-se à vontade para criar issues ou enviar um pull requests com melhorias ou correções.  
 
-Enjoy coding! :)
+Se divirta! :)
