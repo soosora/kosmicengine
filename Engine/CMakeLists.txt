@@ -19,6 +19,8 @@ add_library(KosmicEngine
     src/Renderer/Mesh.cpp
     src/Renderer/Camera.cpp
     src/Renderer/Texture.cpp
+    src/Renderer/Framebuffer.cpp
+    src/Renderer/OpenGLRendererAPI.cpp
     src/Assets/Model.cpp
     src/Assets/Material.cpp
 )

@@ -1,7 +1,11 @@
 #include "Kosmic/Renderer/Renderer3D.hpp"
 #include "Kosmic/Renderer/Shader.hpp"
 #include "Kosmic/Renderer/Mesh.hpp"
+#include "Kosmic/Renderer/StateManager.hpp"
 #include "Kosmic/Core/Logging.hpp"
+#include "Kosmic/Renderer/Framebuffer.hpp"
+#include "Kosmic/Renderer/RendererAPI.hpp"
+#include "Kosmic/Renderer/OpenGLRendererAPI.hpp"
 #include <iostream>
 #include <cstdint>
 
@@ -22,20 +26,19 @@ public:
     std::shared_ptr<Mesh> skyMesh;
 };
 
-Renderer3D::Renderer3D() : pImpl(std::make_unique<Impl>()) {}
+Renderer3D::Renderer3D() : pImpl(std::make_unique<Impl>()) {
+    m_RenderGraph = std::make_shared<RenderGraph>();
+}
+
 Renderer3D::~Renderer3D() {
     if (pImpl->queryID)
         glDeleteQueries(1, &pImpl->queryID);
 }
 
 void Renderer3D::Init() {
-    // Initial OpenGL Settings for 3D Rendering
-    glEnable(GL_DEPTH_TEST); // Enable depth testing
-    glDepthFunc(GL_LESS);    // Depth testing function
-    glEnable(GL_CULL_FACE);  // Enable face culling
-    glCullFace(GL_BACK);     // Cull back faces
-    glFrontFace(GL_CCW);     // Counter-clockwise winding order
-
+    // Initialize the RendererAPI using OpenGL
+    GetOpenGLRendererAPI()->Init();
+    
     // Create and configure shader
     pImpl->shader = Shader::CreateBasicShader();
     pImpl->shader->Bind();
@@ -65,14 +68,23 @@ void Renderer3D::Init() {
         KOSMIC_ERROR("OpenGL error during Renderer initialization: {}", err);
     }
     KOSMIC_INFO("Renderer initialization completed.");
+
+    // Initialize StateManager defaults:
+    StateManager::SetCullFace(true);
+    StateManager::SetDepthTest(true);
 }
 
 void Renderer3D::SetMesh(const std::shared_ptr<Mesh>& mesh) {
     pImpl->mesh = mesh;
 }
 
-void Renderer3D::SetCamera(const std::shared_ptr<Camera>& cam) {
-    pImpl->camera = cam;
+void Renderer3D::SetCamera(const std::shared_ptr<Camera>& camera) {
+    m_Camera = camera;
+    pImpl->camera = camera;
+}
+
+void Renderer3D::SetFramebuffer(const std::shared_ptr<Framebuffer>& framebuffer) {
+    m_Framebuffer = framebuffer;
 }
 
 void Renderer3D::RenderSky() {
@@ -96,11 +108,15 @@ void Renderer3D::RenderSky() {
 }
 
 void Renderer3D::Render() {
+    // If a custom framebuffer is set, bind it before rendering
+    if(m_Framebuffer)
+        m_Framebuffer->Bind();
+    
     // Begin GPU timing query
     glBeginQuery(GL_TIME_ELAPSED, pImpl->queryID);
     
-    // Clear buffers at start of frame
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // Clear buffers using RendererAPI
+    GetOpenGLRendererAPI()->Clear();
     
     // Render procedural sky first
     RenderSky();
@@ -122,10 +138,16 @@ void Renderer3D::Render() {
     
     pImpl->shader->Unbind();
     
+    m_RenderGraph->Execute();
+
     // End GPU timing query
     glEndQuery(GL_TIME_ELAPSED);
     glGetQueryObjectui64v(pImpl->queryID, GL_QUERY_RESULT, &pImpl->gpuTime);
     s_LastGPUTime = pImpl->gpuTime; // Update global GPU time
+    
+    // If a custom framebuffer was bound, unbind to render to default framebuffer
+    if(m_Framebuffer)
+        m_Framebuffer->Unbind();
 }
 
 uint64_t Renderer3D::GetLastGPUTime() {
